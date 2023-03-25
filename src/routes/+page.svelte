@@ -1,9 +1,11 @@
 <script lang="ts">
+	import { generateEmptyArray } from '../utils/helper';
+	import { solveGrid } from '../utils/solver';
 	import { validateBoard } from '../utils/validate';
 
-	let sudokuGrid = Array(9)
-		.fill(0)
-		.map(() => Array(9).fill(null));
+	let initialBoard = generateEmptyArray()
+	let sudokuGrid = [...initialBoard];
+	
 
 	function setInput(row: number, col: number, event: any) {
 		try {
@@ -16,38 +18,36 @@
 		} catch (error) {
 			sudokuGrid[row][col] = null;
 		}
-
 	}
 
-  $: invalidGrids = validateBoard(sudokuGrid);
+	$: invalidGrids = validateBoard(sudokuGrid);
 
-  $: generateStyle = (row: number, col: number) => {
-    let style = 'w-8 h-8 md:w-12 md:h-12 text-center border border-gray-300 ';
-    
-    if (invalidGrids.has(`${row},${col}`)) {
-      style += 'bg-red-100 ';
+	$: generateStyle = (row: number, col: number) => {
+		let style = 'w-8 h-8 md:w-12 md:h-12 text-center border border-gray-300 ';
 
-    }
+		if (invalidGrids.has(`${row},${col}`)) {
+			style += 'bg-red-100 ';
+		}
 
-    if (col % 3 == 0) {
-      style += 'border-l-2 border-l-gray-400 ';
-    }
-    if (row % 3 == 0) {
-      style += 'border-t-2 border-t-gray-400 ';
-    }
-    
+		if (col % 3 == 0) {
+			style += 'border-l-2 border-l-gray-400 ';
+		}
+		if (row % 3 == 0) {
+			style += 'border-t-2 border-t-gray-400 ';
+		}
 
-    if (style != ''){
-      console.log(style, row, col);
-    }
-    return style; 
-  }
+		return style;
+	};
 
+	$: solveBoard = () => {
+		solveGrid(sudokuGrid, 0, 0);
+		sudokuGrid = sudokuGrid;
+	};
 </script>
 
-<div class="container mx-auto py-10 px-5 font-mono">
+<div class="container mx-auto py-10 px-5 font-mono text-center space-y-5">
 	<div class="text-center">
-		<h1 class="text-4xl mb-5">Sudoku App</h1>
+		<h1 class="text-4xl mb-5">Sudokku App</h1>
 	</div>
 
 	<div class="flex justify-center">
@@ -61,11 +61,16 @@
 						maxlength="1"
 						bind:value={sudokuGrid[i][j]}
 						on:input={(e) => setInput(i, j, e)}
-						class="{generateStyle(i, j)} "
+						class={generateStyle(i, j)}
+						disabled={initialBoard[i][j] !== null}
 					/>
 				{/each}
 			{/each}
 		</div>
 	</div>
 
+	<div>
+		<button class="btn" on:click={() => (sudokuGrid = generateEmptyArray())}>Clear</button>
+		<button class="btn" on:click={solveBoard}>Solve</button>
+	</div>
 </div>

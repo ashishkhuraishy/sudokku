@@ -1,5 +1,5 @@
 // check if any number is repeating in a row
-export const validateBoard = (numbers: number[][]) => {
+export const validateBoard = (numbers: any[][]) => {
     const invalidRowColPairs: string[] = [];
     
     // finding invalid rows
