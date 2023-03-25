@@ -1,7 +1,7 @@
 import { shuffledArray } from "./helper";
 
 export function solveGrid(board: (number | null)[][], row: number, col: number): any {
-    if (row == 8 && col == 8) {
+    if (row == 8 && col == 9) {
         return true;
     }
 
@@ -31,7 +31,7 @@ export function solveGrid(board: (number | null)[][], row: number, col: number):
     return false;
 }
 
-function isValid(row: number, col: number, value: number, board: any[][]) {
+export function isValid(row: number, col: number, value: number, board: any[][]) {
     // check if value is present in row
     for (let i = 0; i < 9; i++) {
         if (board[row][i] === value) {

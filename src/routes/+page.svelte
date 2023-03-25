@@ -1,11 +1,10 @@
 <script lang="ts">
-	import { generateEmptyArray } from '../utils/helper';
 	import { solveGrid } from '../utils/solver';
 	import { validateBoard } from '../utils/validate';
+	import { generateEmptyArray } from '../utils/helper';
 
-	let initialBoard = generateEmptyArray()
-	let sudokuGrid = [...initialBoard];
-	
+	let initialBoard = generateEmptyArray();
+	let sudokuGrid = structuredClone(initialBoard);
 
 	function setInput(row: number, col: number, event: any) {
 		try {
@@ -26,7 +25,7 @@
 		let style = 'w-8 h-8 md:w-12 md:h-12 text-center border border-gray-300 ';
 
 		if (invalidGrids.has(`${row},${col}`)) {
-			style += 'bg-red-100 ';
+			style += initialBoard[row][col] !== null ? 'bg-red-300 ' : 'bg-red-100 ';
 		}
 
 		if (col % 3 == 0) {
@@ -39,9 +38,13 @@
 		return style;
 	};
 
-	$: solveBoard = () => {
+	function solveBoard() {
 		solveGrid(sudokuGrid, 0, 0);
 		sudokuGrid = sudokuGrid;
+	};
+
+	function clearBoard() {
+		sudokuGrid = structuredClone(initialBoard);
 	};
 </script>
 
@@ -70,7 +73,7 @@
 	</div>
 
 	<div>
-		<button class="btn" on:click={() => (sudokuGrid = generateEmptyArray())}>Clear</button>
+		<button class="btn" on:click={clearBoard}>Clear</button>
 		<button class="btn" on:click={solveBoard}>Solve</button>
 	</div>
 </div>
